@@ -1,6 +1,6 @@
 Dataset: BUP
 Configuration: {'mlp_hidden_dimension': 16, 'mlp_output_dimension': 16, 'mlp_num_layers': 2, 'gin_hidden_dimension_1': 16, 'gin_hidden_dimension_2': 16, 'gin_num_layers': 2, 'lr': 0.001, 'weight_decay': 0.001, 'dropout_rate': 0.001}
-Avg tet accuracy 5 seeds: 0.7718079673135854
+Avg tet accuracy 5 seeds: 0.7482890704800816
 
-Std deviation: 0.14463206042581453
+Std deviation: 0.1419059402542904
 

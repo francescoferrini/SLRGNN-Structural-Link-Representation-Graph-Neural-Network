@@ -12,6 +12,10 @@ Otherwise, if GPU is available:
 ```bash
 conda env create -f environment_GPU.yml
 ```
+Then activate environment:
+```bash
+conda activate slrgnn
+```
 ### Training
 
 To train our model, navigate to the main folder and change the following variables in the `run.sh` file:

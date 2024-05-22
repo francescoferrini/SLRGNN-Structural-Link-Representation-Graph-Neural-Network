@@ -14,9 +14,7 @@ if torch.cuda.is_available():
     device = torch.device("cuda") 
 else:
     device = torch.device("cpu")
-
-
-    
+  
 def grid_search(args):
     args_dict = vars(args)
     del args_dict['folder']
@@ -38,6 +36,7 @@ def grid_search(args):
         seed_everything(seed=seed)
         data = split(data)
         data = data.to(device)
+        
         test_accuracy = main(param_config, data)
         accuracies.append(test_accuracy)
             
@@ -112,6 +111,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     best_auc = 0
     folder = args.folder
+    
     generate_graph(args.folder, args.dataset)
     best_results = grid_search(args)
     

@@ -1,7 +1,6 @@
 #!/bin/bash
 dataset="BUP"
 folder="/.../SLRGNN-Structural-Link-Representation-Graph-Neural-Network/data/"
-
 file_name="configuration.txt"
 file_path="${folder}${dataset}/${file_name}"
 

@@ -119,7 +119,8 @@ def load_graph(name):
 def split(data):
     tgts  = data.y
     node_ids = [i for i in range(len(data.y))]
-    #node_ids, tgts = rimuovi_elementi_rari(node_ids, tgts)
+    tgts = tgts.cpu()
+
     train_ids, test_ids, train_labels, test_labels = train_test_split(node_ids, tgts, test_size=0.1, stratify=tgts, random_state=4)
     train_ids, val_ids, train_labels, val_labels = train_test_split(train_ids, train_labels, test_size=0.10, stratify=train_labels, random_state=4)
     train_boolean_mask = np.zeros(data.x.size(0), dtype=bool)
