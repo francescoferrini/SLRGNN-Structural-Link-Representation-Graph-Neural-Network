@@ -10,7 +10,7 @@ conda env create -f environment_cpu.yml
 ```
 Otherwise, if GPU is available:
 ```bash
-conda env create -f environment_GPU.yml
+conda env create -f environment_cpu.yml
 ```
 Then activate environment:
 ```bash
