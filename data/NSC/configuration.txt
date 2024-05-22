@@ -1,0 +1,9 @@
+mlp_h_dim=32
+mlp_o_dim=32
+mlp_num_layers=3
+gin_h_dim_1=64
+gin_h_dim_2=32
+gin_num_layers=2
+lr=0.001
+weight_decay=0.0005
+dropout_rate=0.8

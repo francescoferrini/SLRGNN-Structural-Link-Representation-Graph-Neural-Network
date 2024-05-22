@@ -32,6 +32,7 @@ def grid_search(args):
     accuracies = []
     
     data = load_graph(dataset_name)
+    print("Dataset loaded...")
     
     for seed in tqdm(seeds, desc="Training on different seeds"): 
         seed_everything(seed=seed)
@@ -50,14 +51,15 @@ def grid_search(args):
 
 
 def main(params, data):
-
-    model = GIN(in_channels=data.x_original.shape[1], 
-                hidden_channels=params['hidden_dimension'], 
+    model = GIN(in_channels=data.x.shape[1], 
+                mlp_hidden_channels=params['mlp_hidden_dimension'], 
+                mlp_output_channels=params['mlp_output_dimension'],
+                mlp_num_layers=params['mlp_num_layers'],
+                gin_hidden_channels=params['gin_hidden_dimension_1'],
+                gin_output_channels=params['gin_hidden_dimension_2'],
+                gin_num_layers=params['gin_num_layers'],
                 out_channels=torch.unique(data.y).shape[0],
-                num_mlp_layers=params['num_mlp_layers'],
-                num_gin_layers=params['num_gin_layers'],
-                dropout_rate=params['dropout_rate'],
-                num_initial_gin_layers=params['num_initial_gin_layers'])
+                dropout_rate=params['dropout_rate'])
     model = model.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=params['lr'], weight_decay=params['weight_decay'])
     criterion = torch.nn.CrossEntropyLoss()
@@ -89,32 +91,36 @@ if __name__ == '__main__':
             help="folder")
     parser.add_argument("--dataset", type=str, required=True,
             help="dataset to use")
+    parser.add_argument("--mlp_hidden_dimension", type=int, required=True,
+            help="mlp_hidden_dimension")
+    parser.add_argument("--mlp_output_dimension", type=int, required=True,
+            help="mlp_output_dimension")
+    parser.add_argument("--mlp_num_layers", type=int, required=True,
+            help="mlp_num_layers")
+    parser.add_argument("--gin_hidden_dimension_1", type=int, required=True,
+            help="gin_hidden_dimension_1")
+    parser.add_argument("--gin_hidden_dimension_2", type=int, required=True,
+            help="gin_hidden_dimension_2")
+    parser.add_argument("--gin_num_layers", type=int, required=True,
+            help="gin_num_layers")
     parser.add_argument("--lr", type=float, required=True,
-            help="learning rate")
-    parser.add_argument("--hidden_dimension", type=int, required=True,
-            help="embedding dimension")
+            help="lr")
     parser.add_argument("--weight_decay", type=float, required=True,
-            help="dataset to use")
-    parser.add_argument("--num_mlp_layers", type=int, required=True,
-            help="number of MLP layers")
-    parser.add_argument("--num_initial_gin_layers", type=int, required=True,
-            help="number of initial GIN layers")
-    parser.add_argument("--num_gin_layers", type=int, required=True,
-            help="number of GIN layers")
+            help="weight_decay")
     parser.add_argument("--dropout_rate", type=float, required=True,
             help="dropout value")
     args = parser.parse_args()
-    
     best_auc = 0
-    
+    folder = args.folder
     generate_graph(args.folder, args.dataset)
     best_results = grid_search(args)
     
-    with open("best_grid_search_resultsEML.txt", "w") as file:
+    with open(folder+args.dataset+"/"+"results.txt", "w") as file:
         for dataset, result in best_results.items():
             file.write(f"Dataset: {dataset}\n")
             file.write(f"Configuration: {result['config']}\n")
             file.write(f"Avg tet accuracy 5 seeds: {result['accuracy']}\n\n")
             file.write(f"Std deviation: {result['std']}\n\n")
+    print("Results file saved!")
         
     

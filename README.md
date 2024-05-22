@@ -4,9 +4,13 @@ Official repository for SLRGNN model.
 
 ### Requirements
 
-To install the requirements for the project, install them via:
+To install the requirements for the project, if you are using CPU, run:
 ```bash
-pip install -r requirements.txt
+conda env create -f environment_cpu.yml
+```
+Otherwise, if GPU is available:
+```bash
+conda env create -f environment_GPU.yml
 ```
 ### Training
 

@@ -2,12 +2,20 @@
 dataset="BUP"
 folder="/.../SLRGNN-Structural-Link-Representation-Graph-Neural-Network/data/"
 
-lr=0.001
-hidden_dimension=32
-weight_decay=0.0005
-num_mlp_layers=2
-num_initial_gin_layers=2
-num_gin_layers=2
-dropout_rate=0.5
+file_name="configuration.txt"
+file_path="${folder}${dataset}/${file_name}"
 
-python3 main.py --folder ${folder} --dataset ${dataset} --lr ${lr} --hidden_dimension ${hidden_dimension} --weight_decay ${weight_decay} --num_mlp_layers ${num_mlp_layers} --num_initial_gin_layers ${num_initial_gin_layers} --num_gin_layers ${num_gin_layers} --dropout_rate ${dropout_rate}
+mlp_hidden_dimension=$(grep 'mlp_h_dim=' "$file_path" | awk -F'=' '{print $2}')
+mlp_output_dimension=$(grep 'mlp_o_dim=' "$file_path" | awk -F'=' '{print $2}')
+mlp_num_layers=$(grep 'mlp_num_layers=' "$file_path" | awk -F'=' '{print $2}')
+
+gin_hidden_dimension_1=$(grep 'gin_h_dim_1=' "$file_path" | awk -F'=' '{print $2}')
+gin_hidden_dimension_2=$(grep 'gin_h_dim_2=' "$file_path" | awk -F'=' '{print $2}')
+gin_num_layers=$(grep 'gin_num_layers=' "$file_path" | awk -F'=' '{print $2}')
+
+lr=$(grep 'lr=' "$file_path" | awk -F'=' '{print $2}')
+weight_decay=$(grep 'lr=' "$file_path" | awk -F'=' '{print $2}')
+dropout_rate=$(grep 'lr=' "$file_path" | awk -F'=' '{print $2}')
+
+
+python3 main.py --folder ${folder} --dataset ${dataset} --mlp_hidden_dimension ${mlp_hidden_dimension} --mlp_output_dimension ${mlp_output_dimension} --mlp_num_layers ${mlp_num_layers} --gin_hidden_dimension_1 ${gin_hidden_dimension_1} --gin_hidden_dimension_2 ${gin_hidden_dimension_2} --gin_num_layers ${gin_num_layers} --lr ${lr} --weight_decay ${weight_decay} --dropout_rate ${dropout_rate}

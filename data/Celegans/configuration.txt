@@ -1,0 +1,9 @@
+mlp_h_dim=16
+mlp_o_dim=16
+mlp_num_layers=2
+gin_h_dim_1=16
+gin_h_dim_2=26
+gin_num_layers=3
+lr=0.001
+weight_decay=0.0005
+dropout_rate=0.5

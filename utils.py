@@ -23,7 +23,7 @@ def seed_everything(seed: int):
     
 def load_noesis_data(folder, name):
 
-    a = scipy.io.loadmat(folder+name+".mat")
+    a = scipy.io.loadmat(folder+name+"/"+name+".mat")
 
     net = a["net"]
 
@@ -154,7 +154,7 @@ def split(data):
 def train(data, model, criterion, optimizer):
     model.train()
     optimizer.zero_grad()  
-    out = model(data.edge_index, data.x_original, data.edge_index_original, data.edge_dict_original)
+    out = model(data.x, data.edge_index)
     loss = criterion(out[data.train_mask], data.y[data.train_mask])
     loss.backward()  
     optimizer.step()  
@@ -166,7 +166,7 @@ def train(data, model, criterion, optimizer):
 
 def val(data, model, criterion):
     model.eval()
-    out = model(data.edge_index, data.x_original, data.edge_index_original, data.edge_dict_original)
+    out = model(data.x, data.edge_index)
     val_loss = criterion(out[data.val_mask], data.y[data.val_mask])
     pred = out.argmax(dim=1)  # Use the class with highest probability.
     val_correct = pred[data.val_mask] == data.y[data.val_mask]  # Check against ground-truth labels.
@@ -176,7 +176,7 @@ def val(data, model, criterion):
 
 def test(data, best_model, criterion):
     best_model.eval()
-    out = best_model(data.edge_index, data.x_original, data.edge_index_original, data.edge_dict_original)
+    out = best_model(data.x, data.edge_index)
     pred = out.argmax(dim=1)  # Use the class with highest probability.
     test_correct = pred[data.test_mask] == data.y[data.test_mask]  # Check against ground-truth labels.
     test_acc = int(test_correct.sum()) / int(data.test_mask.sum())  # Derive ratio of correct predictions.

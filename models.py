@@ -4,42 +4,46 @@ from torch_geometric.nn import GINConv, MLP
 import torch
 
 class GIN(torch.nn.Module):
-    def __init__(self, in_channels, hidden_channels, out_channels, num_mlp_layers, num_gin_layers, dropout_rate, num_initial_gin_layers):
+    def __init__(self, in_channels, mlp_hidden_channels, mlp_output_channels, mlp_num_layers, gin_hidden_channels, gin_output_channels, gin_num_layers, out_channels, dropout_rate):
         super(GIN, self).__init__()
         self.dropout_rate = dropout_rate
-        self.num_gin_layers = num_gin_layers
         
-        self.initial_gin_layers = torch.nn.ModuleList([
-                GINConv(
-                        Sequential(Linear(in_channels, hidden_channels),
-                        BatchNorm1d(hidden_channels), ReLU(),
-                        Linear(hidden_channels, hidden_channels), ReLU()))
-                if i ==0 else 
-                GINConv(
-                        Sequential(Linear(hidden_channels, hidden_channels),
-                        BatchNorm1d(hidden_channels), ReLU(),
-                        Linear(hidden_channels, hidden_channels), ReLU()))
-                for i in range(num_initial_gin_layers)
-            ])
+        self.mlp_linear = MLP(in_channels=int(in_channels/2), hidden_channels=mlp_hidden_channels, out_channels=mlp_output_channels, num_layers=mlp_num_layers)
         
-        self.mlp_linear = MLP(in_channels=hidden_channels, hidden_channels=hidden_channels, out_channels=hidden_channels, num_layers=num_mlp_layers)
         self.gin_layers = torch.nn.ModuleList([
-                GINConv(
-                        Sequential(Linear(hidden_channels, hidden_channels),
-                        BatchNorm1d(hidden_channels), ReLU(),
-                        Linear(hidden_channels, hidden_channels), ReLU()))
-                for i in range(num_gin_layers)
-            ])
+            GINConv(
+                Sequential(
+                    Linear(mlp_output_channels, gin_hidden_channels),
+                    BatchNorm1d(gin_hidden_channels),
+                    ReLU(),
+                    Linear(gin_hidden_channels, gin_hidden_channels),
+                    ReLU()
+                )
+            ) if i == 0 else
+            GINConv(
+                Sequential(
+                    Linear(gin_hidden_channels, gin_hidden_channels),
+                    BatchNorm1d(gin_hidden_channels),
+                    ReLU(),
+                    Linear(gin_hidden_channels, gin_output_channels),
+                    ReLU()
+                )
+            ) if i == gin_num_layers-1 else
+            GINConv(
+                Sequential(
+                    Linear(gin_hidden_channels, gin_hidden_channels),
+                    BatchNorm1d(gin_hidden_channels),
+                    ReLU(),
+                    Linear(gin_hidden_channels, gin_hidden_channels),
+                    ReLU()
+                )
+            )
+            for i in range(gin_num_layers)
+        ])
         
-        self.out = Linear(hidden_channels, out_channels)
+        self.out = MLP(in_channels=gin_output_channels, hidden_channels=int(gin_output_channels/3), out_channels=out_channels, num_layers=3)
 
-    def forward(self, edge_index, x_original, edge_index_original, edge_dict_original):
-        for conv in self.initial_gin_layers:
-            x_original = conv(x_original, edge_index_original)
-            x_original = F.dropout(x_original, p=self.dropout_rate, training=self.training)
-            
-        x = torch.stack([torch.cat((x_original[value[0]], x_original[value[1]]), dim=0) for value in edge_dict_original.values()])
-        
+    def forward(self, x, edge_index):
         x1 = self.mlp_linear(x[:,:int(len(x[0])/2)])
         x2 = self.mlp_linear(x[:,int(len(x[0])/2):])
         x = x1+x2
