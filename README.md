@@ -18,7 +18,7 @@ conda activate slrgnn
 ```
 ### Training
 
-To train our model, navigate to the main folder and change the following variables in the `run.sh` file:
+To train our model, navigate to the main folder and change the following variables in the `run.sh` file with:
 
 ```sh
 dataset="BUP"
