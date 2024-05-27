@@ -5,6 +5,7 @@ import networkx as nx
 import random
 from collections import defaultdict
 import itertools
+import os
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
@@ -107,6 +108,9 @@ def generate_graph(folder, data_name):
     
     data_object = Data(x=x, edge_index = edge_index.t(), y=torch.tensor(y), num_classes=2, num_features=x.shape[1], edge_dict_original=edge_dict, edge_index_original=data.edge_index, x_original=data.x)
     
+    if not os.path.exists("line_graphs/"):
+        os.makedirs("line_graphs")
+        
     with open("line_graphs/"+data_name+"_line_graph.pkl", "wb") as file:
         pickle.dump(data_object, file)
         
