@@ -34,14 +34,14 @@ def load_noesis_data(folder, name):
     g = nx.from_numpy_array(net)
     feat = [0.1] * 10
     X = dict()
-    # for i,j in nx.clustering(g).items():
-    #     X[i] = [j]
+    for i,j in nx.clustering(g).items():
+        X[i] = [j]
 
     fun = [nx.betweenness_centrality,nx.closeness_centrality]
     for f in fun:
         for i,j in f(g).items():
-            #X[i].append(j)
-            X[i] = feat
+            X[i].append(j)
+            #X[i] = feat
 
     nx.set_node_attributes(g,X,"X")
     data = from_networkx(g,group_node_attrs=["X"])
