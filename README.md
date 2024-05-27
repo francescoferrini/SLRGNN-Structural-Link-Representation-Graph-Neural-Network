@@ -12,7 +12,7 @@ Otherwise, if GPU is available:
 ```bash
 conda env create -f environment_gpu.yml
 ```
-Then activate environment:
+Then activate the environment:
 ```bash
 conda activate slrgnn
 ```
