@@ -7,6 +7,7 @@ channels:
   - pyg
 dependencies:
   - python=3.9
+  - pip=24.0
   - networkx=3.1
   - pytorch
   - torchvision
@@ -17,9 +18,3 @@ dependencies:
   - pip:
     - scikit-learn
     - scipy
-    - scipy==1.13.0
-    - torch-cluster==1.6.3
-    - torch-geometric==2.5.3
-    - torch-scatter==2.1.2
-    - torch-sparse==0.6.18
-    - torch-spline-conv==1.2.2
