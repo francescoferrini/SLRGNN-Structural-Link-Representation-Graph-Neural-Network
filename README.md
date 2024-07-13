@@ -1,7 +1,8 @@
 # SLRGNN-Structural-Link-Representation-Graph-Neural-Network
 
-This is the official repository for the paper "A Simple and Expressive Graph Neural Network Based Method for Structural Link Representation," which was accepted at the **GRaM** workshop at ICML24 (Geometry-grounded Representation Learning and Generative Modeling Workshop). Here, you will find the official implementation of **SLRGNN**.
-:page_with_curl:  [Paper](https://openreview.net/pdf?id=EGGSCLyVrz) 
+This is the official repository for the paper "A Simple and Expressive Graph Neural Network Based Method for Structural Link Representation", which was accepted at the **GRaM** workshop at ICML24 (Geometry-grounded Representation Learning and Generative Modeling Workshop). Here, you will find the official implementation of **SLRGNN**.  
+
+[A Simple and Expressive Graph Neural Network Based Method for Structural Link Representation](https://openreview.net/pdf?id=EGGSCLyVrz) 
 
 
 
